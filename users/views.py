@@ -26,7 +26,7 @@ def login_view(request):
     return Response({"error": "존재하지 않는 회원입니다.", "redirect_url":"login/"}, status=405)
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def logout_view(request):
     logout(request)
     return Response({"message" : "로그아웃되었습니다."}, status=200)
