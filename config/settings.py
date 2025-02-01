@@ -20,7 +20,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+<<<<<<< HEAD
 SECRET_KEY = 'django-insecure-(42^aal$l2t4p+py4q70mg#qp2c&-cw$c-alq2lhs(+hthn@x@'
+=======
+SECRET_KEY = 'django-insecure-(uyxyu(m!louj5b%k!i-2e*0)bzr!*0v^1f*9n#+ck06v1muss'
+>>>>>>> 0fc62c8ad1934d93d225b5bc4804ffd2d5bc5abf
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,8 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
     'rest_framework',
     'users.apps.UsersConfig',
+=======
+    'playlists.apps.PlaylistsConfig',
+>>>>>>> 0fc62c8ad1934d93d225b5bc4804ffd2d5bc5abf
 ]
 
 MIDDLEWARE = [
@@ -56,7 +64,11 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+<<<<<<< HEAD
         'DIRS': [BASE_DIR / 'users/templates/user',],
+=======
+        'DIRS': [],
+>>>>>>> 0fc62c8ad1934d93d225b5bc4804ffd2d5bc5abf
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -86,6 +98,7 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
+<<<<<<< HEAD
 AUTH_USER_MODEL = 'users.User'
 
 AUTHENTICATION_BACKENDS = [
@@ -93,6 +106,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
+=======
+>>>>>>> 0fc62c8ad1934d93d225b5bc4804ffd2d5bc5abf
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
