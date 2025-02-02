@@ -23,9 +23,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-(42^aal$l2t4p+py4q70mg#qp2c&-cw$c-alq2lhs(+hthn@x@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+   '127.0.0.1', 
+   '192.168.212.15',
+   'localhost:5173',
+   '0.0.0.0',
+   'wow-music-mangnae-web-lx59.vercel.app',
+   'wow-music-mangnae-web.vercel.app',
+]
 
 
 # Application definition
@@ -39,6 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'users.apps.UsersConfig',
+    'keywords.apps.KeywordsConfig',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -49,14 +58,19 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+
 
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'users/templates/user',],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -89,6 +103,7 @@ DATABASES = {
 AUTH_USER_MODEL = 'users.User'
 
 AUTHENTICATION_BACKENDS = [
+    'users.backends.EmailBackend',
     'django.contrib.auth.backends.ModelBackend', 
 ]
 
