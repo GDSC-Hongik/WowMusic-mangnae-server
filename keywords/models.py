@@ -15,7 +15,7 @@ class Keyword(models.Model):
         (GENRE, 'Genre')
     ]
     
-    keyword = models.CharField(max_length=10, unique=True)
+    keyword = models.CharField(max_length=10, unique=True, default = "")
     category = models.CharField(max_length=10, choices=CATEGORY, default=EMOTION,)
     
     def __str__(self):
@@ -25,15 +25,14 @@ class Keyword(models.Model):
 class Song(models.Model):
     title = models.CharField(max_length=20)
     artist = models.CharField(max_length=20)
-    keywords = models.ManyToManyField(Keyword, related_name="songs")
-
+    youtube_url = models.URLField(unique=True, null=True, default="")
     def __str__(self):
-        return f"{self.title}, {self.artist}"
+        return f"{self.title} - {self.artist}"
     
 
-class SongKeyword(models.Model):
+class Song_Keyword(models.Model):
     song = models.ForeignKey(Song, on_delete=models.CASCADE)
     keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.song.title}"
+        return f""#{self.song.title} - {self.song.artist}"
