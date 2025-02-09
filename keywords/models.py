@@ -3,10 +3,23 @@ from django.db import models
 # Create your models here.
 
 class Keyword(models.Model):
-    name = models.CharField(max_length=10, unique=True)
+    EMOTION = 'emotion'
+    WEATHER = 'weather'
+    SITUATION = 'situation'
+    GENRE = 'genre'
 
+    CATEGORY = [
+        (EMOTION, 'Emotion'),
+        (WEATHER, 'Weather'),
+        (SITUATION, 'Situation'),
+        (GENRE, 'Genre')
+    ]
+    
+    keyword = models.CharField(max_length=10, unique=True)
+    category = models.CharField(max_length=10, choices=CATEGORY, default=EMOTION,)
+    
     def __str__(self):
-        return self.name
+        return f"{self.keyword} ({self.category})"
 
 
 class Song(models.Model):
@@ -15,7 +28,7 @@ class Song(models.Model):
     keywords = models.ManyToManyField(Keyword, related_name="songs")
 
     def __str__(self):
-        return self.name
+        return f"{self.title}, {self.artist}"
     
 
 class SongKeyword(models.Model):
@@ -23,4 +36,4 @@ class SongKeyword(models.Model):
     keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.song.title} - {self.keyword.name}"
+        return f"{self.song.title}"

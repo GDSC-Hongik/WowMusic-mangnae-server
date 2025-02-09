@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from users import views
+from keywords import views
 
 
 #router = routers.DefaultRouter() # viewset 자동으로 url 연결
@@ -26,5 +27,6 @@ from users import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', include('users.urls')),
+    path('api/keywords/', include('keywords.urls')),
     #path('api/', include(router.urls)),
 ]
