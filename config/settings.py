@@ -28,7 +28,9 @@ DEBUG = True
 ALLOWED_HOSTS = [
    '127.0.0.1', 
    '192.168.212.15',
+   'localhost',
    'localhost:5173',
+   'localhost:8000',
    '0.0.0.0',
    'wow-music-mangnae-web-lx59.vercel.app',
    'wow-music-mangnae-web.vercel.app',
@@ -106,6 +108,7 @@ AUTH_USER_MODEL = 'users.User'
 AUTHENTICATION_BACKENDS = [
     'users.backends.EmailBackend',
     'django.contrib.auth.backends.ModelBackend', 
+    
 ]
 
 
@@ -146,3 +149,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# 요청 타임아웃을 30초로 설정
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_TIMEOUT': 30,
+}
