@@ -28,6 +28,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', include('users.urls')),
     path('api/keywords/', include('keywords.urls')),
-    path('api/fortunes/',include('fortune.urls'))
+    path('api/fortunes/',include('fortunes.urls'))
     #path('api/', include(router.urls)),
 ]
