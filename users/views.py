@@ -6,35 +6,66 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.response import Response
 from .serializers import UserSerializer
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.shortcuts import get_object_or_404
+
+import jwt
+from django.conf import settings
+from datetime import datetime, timedelta, timezone
+
 
 
 # Create your views here.
-def home_view(request):
-    return render(request, "home.html")
+def decode_jwt_token(token):
+    try:
+        # JWT 토큰을 디코딩하여 유효한지 확인
+        decoded_payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        return decoded_payload
+    except jwt.ExpiredSignatureError:
+        # 토큰 만료 에러 처리
+        return {'error': '토큰이 만료되었습니다.'}
+    except jwt.InvalidTokenError:
+        # 유효하지 않은 토큰 에러 처리
+        return {'error': '유효하지 않은 토큰입니다.'}
 
 @api_view(['POST'])
+@csrf_exempt
 def login_view(request):
     if request.method == "POST":
         email = request.data.get('email')
         password = request.data.get('password')
         user = authenticate(request, username = email, password = password)
+        
         if user is not None:
-            print("인증 성공!")
-            login(request, user)
-            return Response({"message": f"{user.username}님 환영합니다!", "redirect_url":"home/"}, status = 200)
+            # JWT 토큰 생성
+            expiration_time = datetime.now(timezone.utc) + timedelta(hours=1)  # 만료 시간 설정
+            payload = {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'exp': expiration_time
+            }
+            token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+
+            return Response({
+                "message": f"{user.username}님 환영합니다!",
+                "redirect_url": "home/",
+                "token": token  # 생성된 토큰을 응답에 포함
+            }, status=200)
         else:
-            print("인증 실패!")
-    return Response({"error": "존재하지 않는 회원입니다.", "redirect_url":"login/"}, status=401)
+            return Response({"error": "존재하지 않는 회원입니다.", "redirect_url": "login/"}, status=401)
+        pass
 
 
 @api_view(['POST'])
 def logout_view(request):
-    logout(request)
-    return Response({"message" : "로그아웃되었습니다."}, status=200)
+    return Response({"message" : "로그아웃되었습니다. 클라이언트에서 토큰을 삭제해주세요."}, status=200)
 
 
 
 @api_view(['POST'])
+@csrf_exempt
 def signup_view(request):
     if request.method == 'POST':
         username = request.data.get('username')
@@ -49,7 +80,18 @@ def signup_view(request):
         user.birth = birth
         user.save()
 
-        return Response({"message" : f"{user.username}님 가입을 환영합니다. 로그인 화면으로 돌아갑니다."}, status =200)
+        # JWT 토큰 생성
+        expiration_time = datetime.now(timezone.utc) + timedelta(hours=1)  # 만료 시간 설정
+        payload = {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'exp': expiration_time
+        }
+        token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+
+        return Response({"message" : f"{user.username}님 가입을 환영합니다. 로그인 화면으로 돌아갑니다.", 
+                         "token": token }, status =200)
         
         
     return Response({"error" : "올바르지 않은 정보입니다"}, status =402)
@@ -58,23 +100,17 @@ def signup_view(request):
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def update_view(request):
-    if not request.user.is_authenticated:
-        return Response({"error": "로그인이 필요합니다."}, status=401)
     
     user = request.user
 
     username = request.data.get("username", user.username)
     email = request.data.get("email", user.email)
-    birth = request.data.get("birth", user.birth)
-
-
-    if User.objects.exclude(id=user.id).filter(email=email).exists():
-        return Response({"error": "이미 사용 중인 이메일입니다."}, status=status.HTTP_409_CONFLICT)
+    password = request.data.get("password", user.password)
 
     # 필드 값 업데이트
     user.username = username
     user.email = email
-    user.birth = birth
+    user.password = password
     user.save()
 
     # 업데이트된 사용자 정보 반환
@@ -83,7 +119,7 @@ def update_view(request):
         "updated_user": {
             "username": user.username,
             "email": user.email,
-            "birth": user.birth.strftime("%Y-%m-%d")  # 날짜를 문자열로 변환
+            "birth": user.password
         }
     }, status=status.HTTP_200_OK)
 

@@ -13,6 +13,24 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import jwt
+from datetime import datetime, timedelta
+
+def generate_jwt_token(user):
+    # 토큰 만료 시간 설정 (예: 1시간)
+    expiration_time = datetime.utcnow() + timedelta(hours=1)
+    
+    # 토큰 생성
+    payload = {
+        'id': user.id,
+        'username': user.username,
+        'email': user.email,
+        'exp': expiration_time  # 만료 시간 추가
+    }
+
+    # 토큰 인코딩
+    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+    return token
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -160,11 +178,24 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CSRF_COOKIE_SECURE = False  
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost',  # 로컬 개발 환경에서만 필요
+    'http://127.0.0.1',  # 로컬 개발 환경에서만 필요
+]
 
+from datetime import timedelta
 # 요청 타임아웃을 30초로 설정
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT 인증 추가
+    ),
+    
+    
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],
+    
     'DEFAULT_TIMEOUT': 30,
 }
+

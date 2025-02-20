@@ -49,6 +49,7 @@ def get_song_view(request):
             "title": song.title,
             "artist": song.artist,
             "youtube_url": song.youtube_url,
+            "made_date" : song.made_date,
             "keywords": [{keyword.category: keyword.keyword} for keyword in song.keywords.all()],
             "match_count": getattr(song, 'match_count', 0)  # match_count가 없는 경우 0으로 처리
         }
