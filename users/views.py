@@ -21,7 +21,10 @@ def login_view(request):
         if user is not None:
             print("인증 성공!")
             login(request, user)
-            return Response({"message": f"{user.username}님 환영합니다!", "redirect_url":"home/"}, status = 200)
+            return Response({"message": f"{user.username}님 환영합니다!", 
+                             "username" : user.username,
+                             "email" : user.email,
+                             "redirect_url":"home/"}, status = 200)
         else:
             print("인증 실패!")
     return Response({"error": "존재하지 않는 회원입니다.", "redirect_url":"login/"}, status=401)
