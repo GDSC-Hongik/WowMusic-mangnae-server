@@ -1,9 +1,9 @@
 from django.urls import path
 from . import views
 
-app_name = 'fortunes'
-
 urlpatterns = [
-    path("result/", views.get_fortune, name = 'get_fortune'),
-
+    # 다른 URL 패턴들...
+    
+    # fortune_view 추가
+    path('fortune/', views.fortune_view, name='fortune_view'),
 ]
