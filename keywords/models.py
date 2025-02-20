@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 # Create your models here.
 
@@ -26,6 +27,7 @@ class Song(models.Model):
     title = models.CharField(max_length=20)
     artist = models.CharField(max_length=20)
     youtube_url = models.URLField(unique=True, null=True, default="")
+    made_date = models.CharField(max_length=10, default=datetime.datetime.now)
     
     keywords = models.ManyToManyField(Keyword, through='Song_Keyword')
     def __str__(self):
