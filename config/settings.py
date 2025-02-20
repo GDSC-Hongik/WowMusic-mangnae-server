@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-(42^aal$l2t4p+py4q70mg#qp2c&-cw$c-alq2lhs(+hthn@x@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
    '127.0.0.1', 
@@ -34,9 +39,13 @@ ALLOWED_HOSTS = [
    '0.0.0.0',
    'wow-music-mangnae-web-lx59.vercel.app',
    'wow-music-mangnae-web.vercel.app',
+
+   #ec2
+   "52.79.151.35",
 ]
 
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Application definition
 
 INSTALLED_APPS = [
@@ -50,6 +59,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'users.apps.UsersConfig',
     'keywords.apps.KeywordsConfig',
+    'fortunes.apps.FortunesConfig',
     
 ]
 
@@ -144,6 +154,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "backend/static"),  # 백엔드 정적 파일
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

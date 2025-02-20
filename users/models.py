@@ -6,7 +6,8 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     class Meta:
         db_table = "user"
-    username = models.CharField(max_length=20, unique = True)
     email = models.EmailField(unique=True, null=False, blank=False)
-    birth = models.DateField(null=False)
+    username = models.CharField(max_length=20, unique = True)
+    password = models.TextField(max_length= 20, null=False, blank=False)
+    birth = models.DateField(null=True, default="2000-01-01")
     
